@@ -9,6 +9,29 @@ import java.util.Map;
  * 
  * @author chenlb 2009-2-20 下午11:30:14
  */
+/**
+ * 说明一下这个词典的存储结构：
+ * 
+ * 1.CharNode，故名思议就是单个字的结点，这个结点包含一个指向起所有子孙形成的一棵树的指针:private KeyTree ktWordTails = new KeyTree();
+ * 2.KeyTree的抽象数据结构就是TreeNode和一些增删改查方法，而TreeNode实际上是一个可以"无限生长"的Node,它的无限生长的表现方式通过包含一个指向
+ *     Map<Character, TreeNode> subNodes 的指针实现。
+ * 
+ * 这样封装就相当于是一个CharNode对象，就包含了以这个字开头所组成的所有词。
+ * 如以一开头的词：一万，一万年，一万元，一千，一千年，一千元，其中万，千是树的第二层，年，元是第三层。
+ * 这里面总共生成了三个map：
+ * 　map1:{entry("万",node1),entry("千",node2)}
+ *     map2:{entry("年",node3),entry("元",node4)}
+ *     map3:{entry("年",node5),entry("元",node6)}
+ * 　CharNode为“一”所指向的树的head节点指向map1(node1,node2)
+ *     node1指向map2(node3,node4)
+ *     node2指向map3(node5,node6)
+ *     
+ *     实际上就是任何一个节点下的所有儿子节点都会生成一个Map<Character, TreeNode> subNodes ,这样生成的map是很多的，典型的空间换时间。
+ *     
+ *     是否有一种更好的tire树存储结构呢?
+ * @author hcy
+ *
+ */
 public class CharNode {
 
 	private int freq = -1;	//Degree of Morphemic Freedom of One-Character, 单字才需要
